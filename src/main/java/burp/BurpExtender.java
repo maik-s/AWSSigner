@@ -11,13 +11,14 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener
 
     private IExtensionHelpers helpers;
     private PrintWriter pw;
+    private GridLayout gridlayout;
     private JPanel panel;
     private JTextField accessKey;
     private JTextField secretKey;
     private JTextField region;
     private JTextField service;
-
     private JComboBox profileComboBox;
+
     private int numProfiles = 0;
     private JButton saveProfileButton;
     private JButton useProfileButton;
@@ -35,6 +36,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener
 
         helpers = callbacks.getHelpers();
         this.pw = new PrintWriter(callbacks.getStdout(), true);
+        setUpUIComponents();
         setupTab();
 
         callbacks.setExtensionName("AWS Signer");
@@ -49,6 +51,58 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener
 
             callbacks.registerHttpListener(BurpExtender.this);
         });
+
+        accessKey.setText("accesskey");
+        secretKey.setText("secretkey");
+        region.setText("region");
+        service.setText("service");
+    }
+
+    private void setUpUIComponents() {
+        gridlayout = new GridLayout(7,2,-1,-1);
+
+        panel = new JPanel();
+        panel.setLayout(gridlayout);
+
+        JLabel lAccessKey = new JLabel("Access key");
+        panel.add("acceskeylabel", lAccessKey);
+        accessKey = new JTextField();
+        
+        panel.add("accesskey", accessKey);
+        JLabel lSecretKey = new JLabel("Secret Key:");
+        panel.add("secretkeylabel", lSecretKey);
+        secretKey = new JTextField();
+        
+        panel.add("secretkey", secretKey);
+
+        JLabel lRegion = new JLabel("Region:");
+        panel.add("regioenlabel", lRegion);
+        region = new JTextField();
+        
+        panel.add("region", region);
+
+        JLabel lService = new JLabel("Service:");
+        panel.add("servicelabel", lService);
+        service = new JTextField();
+        
+        panel.add("service", service);
+
+
+        deleteProfileButton = new JButton("delete profile");
+        panel.add("deletebutton", deleteProfileButton);
+
+        useProfileButton = new JButton("use profile");
+        useProfileButton = new JButton("use profile");
+        panel.add("useprofilebutton", deleteProfileButton);
+
+        saveProfileButton = new JButton("save profile");
+        panel.add("saveProfileButton", saveProfileButton);
+
+        JLabel labelProfileCombobox = new JLabel("Profile:");
+        panel.add("profilelabel", labelProfileCombobox);
+
+        this.profileComboBox = new JComboBox<>();
+        panel.add("profilecombobox", profileComboBox);
     }
 
     public void createNewProfile() {
